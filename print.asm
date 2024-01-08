@@ -2,23 +2,25 @@
     %define PRINT_ASM
 %endif
 
-print:
-    call length
-    mov rdx, rax
-    mov rsi, rdi
-    mov rdi, 1
-    mov rax, 1
+                                ; rdi
+print:                          ; char* message
+    call length                 ; no need to set rdi since print and length share first paramater
+    mov rdx, rax                ; set rdx to length of string
+    mov rsi, rdi                ; rsi is root of string
+    mov rdi, 1                  ; rdi is output stream
+    mov rax, 1                  ; write syscall
     syscall
     ret
 
-length:
-    mov rbx, rdi
-    mov rax, 0
+                                ; rdi
+length:                         ; char* string
+    mov rbx, rdi                ; rbx is root address of string
+    mov rax, 0                  ; rax is character count
     count:
-        mov rcx, rbx
+        mov rcx, rbx            ; rcx is current character address 
         add rcx, rax
         inc rax
-        cmp byte [rcx], 0
+        cmp byte [rcx], 0       ; check if current character is null
         jnz count
-    sub rax, 1
+    dec rax                     ; don't count null
     ret
