@@ -1,8 +1,8 @@
 test : test.o
-		ld -o build/test build/test.o
+		gcc -z noexecstack -no-pie -o build/test build/test.o
 
 test.o : builddir
-		nasm -felf64 -F dwarf -g main.asm -o build/test.o
+		nasm -felf64 -F dwarf main.asm -o build/test.o
 
 builddir : 
 		mkdir -p build

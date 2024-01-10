@@ -1,18 +1,19 @@
-global _start
+global main
 
-%include "print.asm"
+%include "include.asm"
+
+extern free
 
 section .data
-msg1: db "Hello world!", 10, 0 ; 10=LF
-msg2: db "Hello underworld!", 10, 0
+msg: db "Hello world!", 10, 0 ; 10=LF
 
 section .text
 
-_start:
-    mov rdi, msg1
-    call print
-    mov rdi, msg2
-    call print
+main:
+    mov rdi, msg
+    call print_string
+    mov rdi, 18446744073709551615
+    call print_int
     
     mov rdi, 0 ; exit code 0
     mov rax, 60 ; exit syscall
