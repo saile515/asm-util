@@ -28,47 +28,47 @@ length:                         ; char* string
 
                                 ; rdi
 print_int:                      ; int number
-    call int_to_string
-    push rax
-    mov rdi, rax
+    call int_to_string          ; convert parameter to string
+    push rax                    ; save string address
+    mov rdi, rax                ; print string
     call print_string
-    pop rdi
-    call free
+    pop rdi                     ; restore address
+    call free                   ; free string from memory
     ret
 
                                 ; rdi
 int_to_string:                  ; int number
-    push rdi
-    mov rdi, 21
+    push rdi                    ; save parameter
+    mov rdi, 21                 ; allocate 64-bit int max length + null
     call malloc
-    mov r8, rax
-    mov rbx, 0
-    pop rax
+    mov r8, rax                 ; save memory address of string in r8
+    mov rbx, 0                  ; rbx is counting characters
+    pop rax                     ; restore parameter to rax
     .first_char_of_int:
-        mov rdx, 0
+        mov rdx, 0              ; calculate first digit
         mov rcx, 10 
         div rcx
-        add rdx, 48
-        mov rcx, 20
+        add rdx, 48             ; add ascii digit offset
+        mov rcx, 20             ; append characters backwards
         sub rcx, rbx
         add rcx, r8
         mov [rcx], dl
         inc rbx
-        cmp rax, 0
+        cmp rax, 0              ; repeat label if more digits are present
         jne .first_char_of_int
-    mov rcx, r8
+    mov rcx, r8                 ; count offset for trimming
     .trim
-        mov rax, r8
+        mov rax, r8             ; start loop from first digit
         add rax, 21
         sub rax, rbx
-        mov dl, [rax]
+        mov dl, [rax]           ; move digit to beginning of string
         mov byte [rcx], dl
-        mov byte [rax], 0
+        mov byte [rax], 0       ; null-write old location
         inc rcx
-        dec rbx
-        cmp rbx, 0
+        dec rbx                 ; count how many characters have been moved
+        cmp rbx, 0              ; repeat label if more digits are present
         jne .trim
-    mov rax, r8
+    mov rax, r8                 ; return string address
     ret
 
 %endif
