@@ -2,8 +2,6 @@ global main
 
 %include "include.asm"
 
-extern free
-
 section .data
 msg: db "Hello world!", 10, 0 ; 10=LF
 
